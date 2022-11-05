@@ -5,6 +5,7 @@
 
 # User-specific files
 *vcxproj*
+Source.cpp
 *.rsuser
 *.suo
 *.user
