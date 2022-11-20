@@ -1,3 +1,6 @@
+// Exercise 3 - Regex Update
+// Modify the chapter example to use regular expressions to find the subject and sender.
+
 #include <string>
 #include <vector>
 #include <map>
@@ -27,7 +30,6 @@ struct Mail_file
 	string name;
 	vector<string> lines;
 	vector<Message> m;
-	regex patsubj{ "Subject: " };
 	Mail_file(const string& n);
 	Mess_iter begin() { return m.begin(); }
 	Mess_iter end() { return m.end(); }
@@ -69,11 +71,11 @@ int is_prefix(const string& s, const string& p)
 
 bool find_sender(const Message* m, string& s)
 {
-	regex patfrom{ R"(^From:(\s*)?(.+)$)" };
+	regex pat{ R"(^From:(\s*)?(.+)$)" };
 	for (const auto& x : *m)
 	{
 		smatch matches;
-		if (regex_search(x, matches, patfrom))
+		if (regex_search(x, matches, pat))
 		{
 			s = matches[2];
 			return true;
@@ -84,9 +86,14 @@ bool find_sender(const Message* m, string& s)
 
 string find_subject(const Message* m)
 {
+	regex pat{ R"(^Subject:(\s*)?(.+)$)" };
+
 	for (const auto& x : *m)
-		if (int n = is_prefix(x, "Subject: "))
-			return string(x, n);
+	{
+		smatch matches;
+		if (regex_search(x, matches, pat))
+			return matches[2];
+	}
 	return "";
 }
 //-----------------------------------------------------------------------------
