@@ -1,3 +1,6 @@
+// Exercise 4 - Real Email
+// Find a real email message file (containing real email messages)
+// and modify example to extract subject lines from sender names given as input.
 
 #include <string>
 #include <vector>
