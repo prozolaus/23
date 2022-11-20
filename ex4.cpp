@@ -1,5 +1,3 @@
-// Exercise 3 - Regex Update
-// Modify the chapter example to use regular expressions to find the subject and sender.
 
 #include <string>
 #include <vector>
@@ -63,7 +61,7 @@ Mail_file::Mail_file(const string& n)
 
 bool find_sender(const Message* m, string& s)
 {
-	regex pat{ R"(^From:(\s*)?(.+)$)" };
+	regex pat{ R"(^From:(\s)?(.+)$)" };
 	for (const auto& x : *m)
 	{
 		smatch matches;
@@ -78,7 +76,7 @@ bool find_sender(const Message* m, string& s)
 
 string find_subject(const Message* m)
 {
-	regex pat{ R"(^Subject:(\s*)?(.+)$)" };
+	regex pat{ R"(^Subject:(\s)?(.+)$)" };
 
 	for (const auto& x : *m)
 	{
@@ -88,25 +86,44 @@ string find_subject(const Message* m)
 	}
 	return "";
 }
+
 //-----------------------------------------------------------------------------
+
 int main()
 try
 {
 	Mail_file mfile{ "mail2.txt" };
 
-	multimap<string, const Message*> mm;
+	multimap<string, const Message*> senders;
 
 	for (const auto& m : mfile)
 	{
 		string s;
 		if (find_sender(&m, s))
-			mm.insert(make_pair(s, &m));
+			senders.insert(make_pair(s, &m));
 	}
 
-	auto pp = mm.equal_range("Todd Fehr <toddgod@example.com>");
-	for (auto p = pp.first; p != pp.second; ++p)
-		cout << find_subject(p->second) << endl;
-
+	string sndr;
+	while (true)
+	{
+		cout << "Enter sender name: ";
+		getline(cin, sndr);
+		if (sndr == "quit")
+			return 0;
+		auto pp = senders.equal_range(sndr);
+		if (pp.first == pp.second)
+			cout << "Sender not found!\n";
+		else
+			cout << "Subjects:\n";
+		for (auto p = pp.first; p != pp.second; ++p)
+		{
+			string s = find_subject(p->second);
+			if (s.empty())
+				cout << "No subject!\n";
+			else
+				cout << s << endl;
+		}
+	}
 	cout << "The file contains " << mfile.m.size() << " messages." << endl;
 }
 catch (std::exception& e) {
