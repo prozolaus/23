@@ -86,7 +86,7 @@ string find_subject(const Message* m)
 int main()
 try
 {
-	Mail_file mfile{ "mail.txt" };
+	Mail_file mfile{ "mail2.txt" };
 
 	multimap<string, const Message*> mm;
 
@@ -97,7 +97,7 @@ try
 			mm.insert(make_pair(s, &m));
 	}
 
-	auto pp = mm.equal_range("John Doe <jdoe@machine.example>");
+	auto pp = mm.equal_range("Todd Fehr <toddgod@example.com>");
 	for (auto p = pp.first; p != pp.second; ++p)
 		cout << find_subject(p->second) << endl;
 
