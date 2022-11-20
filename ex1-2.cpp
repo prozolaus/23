@@ -1,3 +1,13 @@
+// Stroustrup - Programming Principles & Practice
+//
+// Chapter 23 Exercise 1 - More Mail File Fun
+// Get the email file example to run and test it with a larger file of emails.
+// Try to break the program with extra addresses.
+//
+// Exercise 2 - Input Subject Search
+// Add a multimap to hold subjects. Take keyboard input and 
+
+
 #include <string>
 #include <vector>
 #include <map>
@@ -99,7 +109,9 @@ try
 		string s;
 		if (find_sender(&m, s))
 			senders.insert(make_pair(s, &m));
-		subjects.insert(make_pair(find_subject(&m), &m));
+		s = find_subject(&m);
+		if (s.size())
+			subjects.insert(make_pair(s, &m));
 	}
 
 	string subj;
