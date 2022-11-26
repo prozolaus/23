@@ -64,13 +64,13 @@ Mail_file::Mail_file(const string& n)
 
 bool find_sender(const Message* m, string& s)
 {
-	regex pat{ R"(^From:(\s)?(.+)$)" };
+	regex pat{ R"(^From:\s(.+)$)" };
 	for (const auto& x : *m)
 	{
 		smatch matches;
-		if (regex_search(x, matches, pat))
+		if (regex_match(x, matches, pat))
 		{
-			s = matches[2];
+			s = matches[1];
 			return true;
 		}
 	}
@@ -79,13 +79,13 @@ bool find_sender(const Message* m, string& s)
 
 string find_subject(const Message* m)
 {
-	regex pat{ R"(^Subject:(\s)?(.+)$)" };
+	regex pat{ R"(^Subject:\s(.+)$)" };
 
 	for (const auto& x : *m)
 	{
 		smatch matches;
-		if (regex_search(x, matches, pat))
-			return matches[2];
+		if (regex_match(x, matches, pat))
+			return matches[1];
 	}
 	return "";
 }
@@ -95,7 +95,7 @@ string find_subject(const Message* m)
 int main()
 try
 {
-	Mail_file mfile{ "mail2.txt" };
+	Mail_file mfile{ "mail3.txt" };
 
 	multimap<string, const Message*> senders;
 
@@ -105,6 +105,8 @@ try
 		if (find_sender(&m, s))
 			senders.insert(make_pair(s, &m));
 	}
+	cout << "The file contains " << mfile.m.size() << " messages." << endl;
+	cout << "The multimap contains " << senders.size() << " messages." << endl;
 
 	string sndr;
 	while (true)
@@ -113,21 +115,16 @@ try
 		getline(cin, sndr);
 		if (sndr == "quit")
 			return 0;
+
 		auto pp = senders.equal_range(sndr);
-		if (pp.first == pp.second)
-			cout << "Sender not found!\n";
-		else
-			cout << "Subjects:\n";
+		cout << (pp.first == pp.second ? "Sender not found!" : "Subjects from the sender:") << endl;
+		
 		for (auto p = pp.first; p != pp.second; ++p)
 		{
 			string s = find_subject(p->second);
-			if (s.empty())
-				cout << "No subject!\n";
-			else
-				cout << s << endl;
+			cout << (s.empty() ? "No subject!" : s) << endl;
 		}
 	}
-	cout << "The file contains " << mfile.m.size() << " messages." << endl;
 }
 catch (std::exception& e) {
 	cerr << "Exception: " << e.what() << '\n';
