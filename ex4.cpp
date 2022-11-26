@@ -95,7 +95,7 @@ string find_subject(const Message* m)
 int main()
 try
 {
-	Mail_file mfile{ "mail3.txt" };
+	Mail_file mfile{ "mail2.txt" };
 
 	multimap<string, const Message*> senders;
 
