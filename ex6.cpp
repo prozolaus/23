@@ -11,11 +11,11 @@ using namespace std;
 bool has_date(const string& line)
 {
 	// month or day first, separated by / or . or -
-	regex pat{ R"(\d{1,2}[-/\.]\d{1,2}[-/\.]\d{4})" };
+	regex pat{ R"((\s+|^)\d{1,2}[-/\.]\d{1,2}[-/\.]\d{4}\D)" };
 	// January 31, 2008
-	regex pat2{ R"((January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\D)" };
+	regex pat2{ R"((\s+|^)(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\D)" };
 	// 31 January 2008
-	regex pat3{ R"(\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\D)" };
+	regex pat3{ R"((\s+|^)\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\D)" };
 
 	smatch matches;
 	return regex_search(line, matches, pat) || regex_search(line, matches, pat2) || regex_search(line, matches, pat3);
